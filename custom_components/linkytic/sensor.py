@@ -16,6 +16,7 @@ from homeassistant.const import (
     UnitOfElectricCurrent,
     UnitOfEnergy,
     UnitOfPower,
+    UnitOfElectricPotential,
 )
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
@@ -79,10 +80,364 @@ async def async_setup_entry(
     sensors = []
     if config_entry.data.get(SETUP_TICMODE) == TICMODE_STANDARD:
         # standard mode
-        _LOGGER.error(
-            "%s: standard mode is not supported (yet ?): no entities will be spawned",
-            config_entry.title,
-        )
+        sensors = [
+            ADCOSensor(
+                config_entry.title, config_entry.entry_id, serial_reader, tag = "ADSC"
+            ),
+            RegularStrSensor(
+                tag="LTARF",
+                name="Tarif fournisseur en cours",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+                icon="mdi:cash-check",
+                category=EntityCategory.CONFIG,
+            ),
+            RegularIntSensor(
+                tag="PCOUP",
+                name="Puissance app. de coupure",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+                category=EntityCategory.CONFIG,
+                device_class=SensorDeviceClass.APPARENT_POWER,
+                native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE, #TODO: kVA
+            ),
+            RegularIntSensor(
+                tag="PREF",
+                name="Puissance app. de référence",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+                category=EntityCategory.CONFIG,
+                device_class=SensorDeviceClass.APPARENT_POWER,
+                native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE, #TODO: kVA
+            ),
+            RegularIntSensor(
+                tag="SINSTS",
+                name="Puissance app. Instantanée soutirée",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+                category=EntityCategory.CONFIG,
+                device_class=SensorDeviceClass.APPARENT_POWER,
+                native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE,
+            ),
+            RegularIntSensor(
+                tag="SMAXSN",
+                name="Puissance app. max. soutirée n",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+                category=EntityCategory.CONFIG,
+                device_class=SensorDeviceClass.APPARENT_POWER,
+                native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE,
+            ),
+            RegularIntSensor(
+                tag="UMOY1",
+                name="Tension moyenne phase 1",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+                category=EntityCategory.CONFIG,
+                device_class=SensorDeviceClass.VOLTAGE,
+                native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+            ),
+            EnergyIndexSensor(
+                tag="EASF01",
+                name="Energie active soutirée fournisseur, index 01",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASF02",
+                name="Energie active soutirée fournisseur, index 02",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASF03",
+                name="Energie active soutirée fournisseur, index 03",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASF04",
+                name="Energie active soutirée fournisseur, index 04",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASF05",
+                name="Energie active soutirée fournisseur, index 05",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASF06",
+                name="Energie active soutirée fournisseur, index 06",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASF07",
+                name="Energie active soutirée fournisseur, index 07",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASF08",
+                name="Energie active soutirée fournisseur, index 08",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASF09",
+                name="Energie active soutirée fournisseur, index 09",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASF10",
+                name="Energie active soutirée fournisseur, index 10",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASD01",
+                name="Energie active soutirée distributeur, index 01",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASD02",
+                name="Energie active soutirée distributeur, index 02",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASD03",
+                name="Energie active soutirée distributeur, index 03",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            EnergyIndexSensor(
+                tag="EASD04",
+                name="Energie active soutirée distributeur, index 04",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+            ),
+            RegularIntSensor(
+                tag="IRMS1",
+                name="Courant efficace phase 1",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+                device_class=SensorDeviceClass.CURRENT,
+                native_unit_of_measurement=UnitOfElectricCurrent.AMPERE
+            ),
+            RegularIntSensor(
+                tag="URMS1",
+                name="Tension efficace phase 1",
+                config_title=config_entry.title,
+                config_uniq_id=config_entry.entry_id,
+                serial_reader=serial_reader,
+                category=EntityCategory.CONFIG,
+                device_class=SensorDeviceClass.VOLTAGE,
+                native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+            ),
+        ]
+
+        
+
+        # Add specific sensors
+        if bool(config_entry.data.get(SETUP_THREEPHASE)):
+            # three-phase - concat specific sensors
+            sensors.append(
+                RegularIntSensor(
+                    tag="SINSTS1",
+                    name="Puissance app. Instantanée soutirée phase 1",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    device_class=SensorDeviceClass.APPARENT_POWER,
+                    native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="SINSTS2",
+                    name="Puissance app. Instantanée soutirée phase 2",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    device_class=SensorDeviceClass.APPARENT_POWER,
+                    native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="SINSTS3",
+                    name="Puissance app. Instantanée soutirée phase 3",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    device_class=SensorDeviceClass.APPARENT_POWER,
+                    native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="SMAXSN1",
+                    name="Puissance app. max. soutirée n phase 1",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    device_class=SensorDeviceClass.APPARENT_POWER,
+                    native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="SMAXSN2",
+                    name="Puissance app. max. soutirée n phase 2",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    device_class=SensorDeviceClass.APPARENT_POWER,
+                    native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="SMAXSN3",
+                    name="Puissance app. max. soutirée n phase 3",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    device_class=SensorDeviceClass.APPARENT_POWER,
+                    native_unit_of_measurement=UnitOfApparentPower.VOLT_AMPERE,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="UMOY2",
+                    name="Tension moyenne phase 2",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    category=EntityCategory.CONFIG,
+                    device_class=SensorDeviceClass.VOLTAGE,
+                    native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="UMOY3",
+                    name="Tension moyenne phase 3",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    category=EntityCategory.CONFIG,
+                    device_class=SensorDeviceClass.VOLTAGE,
+                    native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="IRMS2",
+                    name="Courant efficace phase 2",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    device_class=SensorDeviceClass.CURRENT,
+                    native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="IRMS3",
+                    name="Courant efficace phase 3",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    device_class=SensorDeviceClass.CURRENT,
+                    native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="URMS2",
+                    name="Tension efficace phase 2",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    category=EntityCategory.CONFIG,
+                    device_class=SensorDeviceClass.VOLTAGE,
+                    native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                )
+            )
+
+            sensors.append(
+                RegularIntSensor(
+                    tag="URMS3",
+                    name="Tension efficace phase 3",
+                    config_title=config_entry.title,
+                    config_uniq_id=config_entry.entry_id,
+                    serial_reader=serial_reader,
+                    category=EntityCategory.CONFIG,
+                    device_class=SensorDeviceClass.VOLTAGE,
+                    native_unit_of_measurement=UnitOfElectricPotential.VOLT,
+                    state_class=SensorStateClass.MEASUREMENT,
+                    register_callback=True,
+                ),
+            )
     else:
         # historic mode
         sensors = [
@@ -438,7 +793,11 @@ class ADCOSensor(SensorEntity):
     _attr_icon = "mdi:tag"
 
     def __init__(
-        self, config_title: str, config_uniq_id: str, serial_reader: LinkyTICReader
+        self,
+        config_title: str,
+        config_uniq_id: str,
+        serial_reader: LinkyTICReader,
+        tag: str = "ADCO"
     ) -> None:
         """Initialize an ADCO Sensor."""
         _LOGGER.debug("%s: initializing ADCO sensor", config_title)
@@ -447,7 +806,7 @@ class ADCOSensor(SensorEntity):
         self._config_uniq_id = config_uniq_id
         self._last_value: str | None = None
         self._serial_controller = serial_reader
-        self._tag = "ADCO"
+        self._tag = tag
         # Generic entity properties
         self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_adco"
         # We need to parse the ADS value first thing to have correct values for the device identification
